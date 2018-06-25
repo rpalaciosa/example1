@@ -1,68 +1,10 @@
-@extends('layouts.app')
+
+@extends('layouts.admin')
 
 @section('content')
-
-<style>
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input {display:none;}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-
-
+<link href="/css/marks.css" rel="stylesheet">
     <div class="container">
-        <div class="col-sm-offset-2 col-sm-8">
+        <div class="col-sm-10 col-md-10 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Marcas
@@ -72,39 +14,70 @@ input:checked + .slider:before {
                     <!-- Display Validation Errors -->
                     @include('common.errors')
 
-                    <form action="{{ url('mark')}}" method="POST" class="form-horizontal">
+                  	 <form action="{{ url('admin/marcas')}}" method="POST" class="form-horizontal">
                         {{ csrf_field() }}
 
                         <div class="form-group">
-                            <label for="task-name" class="col-sm-3 control-label">Marca</label>
+                            <label for="mark-nombre" class="col-sm-3 control-label">Marca</label>
 
                             <div class="col-sm-9">
-                                <input type="text" name="nombre" id="mark-nombre" class="form-control" value="{{ old('task') }}">
+                                <input type="text" name="nombre" id="mark-nombre" class="form-control" value="{{ old('mark') }}">
                             </div>
 							
                         </div>
 						
 						<div class="form-group">
-							<label for="task-name" class="col-sm-3 control-label">Descripción</label>
+							<label for="mark-descripcion" class="col-sm-3 control-label">Descripción</label>
 
                             <div class="col-sm-9">
-								 <textarea class="form-control col-sm-9" rows="3" name="descripcion" id="mark-descripcion">{{ old('task') }}</textarea>
+								 <textarea class="form-control col-sm-9" rows="3" name="descripcion" id="mark-descripcion">{{ old('mark') }}</textarea>
                             </div>
 						</div>
 						
 						<div class="form-group">
-							<label for="task-name" class="col-sm-3 control-label">Activo</label>
+							<label for="mark-estado" class="col-sm-3 control-label">Activo</label>
 
                             <div class="col-sm-9">
 								 <!-- Rounded switch -->
 								<label class="switch">
-								  <input type="checkbox">
+								  <input type="checkbox" name="estado" id="mark-estado">
 								  <span class="slider round"></span>
 								</label>
 								
                             </div>
 						</div>
 						
+						<div class="form-group">
+							<label for="mark-id_categoria" class="col-sm-3 control-label">Categor&iacute;a</label>
+
+							<div class="col-sm-9">
+								<select name="id_categoria" id="mark-id_categoria" class="form-control">
+									@foreach ($categories as $cat)
+										<option value="{{ $cat->id }}">{{ $cat->title  }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						
+						<div class="form-group">
+                            <label for="mark-url" class="col-sm-3 control-label">URL</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" name="url" id="mark-url" class="form-control" value="{{ old('mark') }}">
+                            </div>
+							
+                        </div>	
+						
+						<div class="form-group">
+                            <label for="mark-logo" class="col-sm-3 control-label">Logo</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" name="logo" id="mark-logo" class="form-control" value="{{ old('mark') }}">
+                            </div>
+							
+                        </div>	
+								
+								
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
                                 <button type="submit" class="btn btn-default">
@@ -128,15 +101,19 @@ input:checked + .slider:before {
                     <div class="panel-body">
                         <table class="table table-striped mark-table">
                             <thead>
-                                <th>#</th>
-								<th>Marca</th>
-                                <th>&nbsp;</th>
+                                <th>Marca</th>
+								<th>Estado</th>
+                                <th>Categoria</th>
+								<th>url</th>
+								<th>&nbsp;</th>
                             </thead>
                             <tbody>
                                 @foreach ($marks as $mark)
                                     <tr>
-                                        <td class="table-text"><div>{{ $mark->id }}</div></td>
-										<td class="table-text"><div>{{ $mark->name }}</div></td>
+                                        <td class="table-text"><div>{{ $mark->nombre }}</div></td>
+										<td class="table-text"><div>{{ $mark->estado }}</div></td>
+										<td class="table-text"><div>{{ App\Mark::GetCategory($mark->id_categoria)[0]->title }}</div></td>
+										<td class="table-text"><div>{{ $mark->url }}</div></td>
 
                                         <!-- mark Delete Button -->
                                         <td>

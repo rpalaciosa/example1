@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Http\Request;
+use App\Http\Requests;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -61,9 +62,12 @@ Route::post('add-category',['as'=>'add.category','uses'=>'CategoryController@add
 
 /*    marcas */
 
-Route::get('/marcas', function () {
-       return view('marks', [
-            'marks' => \App\Mark::orderBy('created_at', 'asc')->get()
-        ]);
-    });
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/marcas', ['uses'=>'MarkController@MarkForm']);
+	Route::post('/marcas', ['uses'=>'MarkController@MarkFormAdd']);	 
+	Route::get('/dashboard', ['uses'=>'MarkController@dashboard']);
+});
+
+  
+       
 	
